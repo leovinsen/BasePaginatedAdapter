@@ -1,0 +1,336 @@
+package com.nostratech.mufit.trainer.order;
+
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RatingBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
+import com.nostratech.mufit.trainer.R;
+import com.nostratech.mufit.trainer.base.BaseViewInterface;
+import com.nostratech.mufit.trainer.base.ToolbarBackButtonActivity;
+import com.nostratech.mufit.trainer.history.HistoryActivity;
+import com.nostratech.mufit.trainer.utils.dialog.BaseMufitDialog;
+import com.nostratech.mufit.trainer.utils.dialog.MufitDialogOneButton;
+import com.nostratech.mufit.trainer.utils.glidehelper.GlideApp;
+
+import java.util.Objects;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+public class OrderDetailsActivity extends ToolbarBackButtonActivity
+        implements BaseViewInterface,
+        OrderDetailsInterface.View,
+        OnMapReadyCallback {
+
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.order_details)
+    View mLayout;
+    
+    @BindView(R.id.progressBar)
+    ProgressBar mProgressBar;
+    @BindView(R.id.group_content)
+
+    GoogleMap mMap;
+    @BindView(R.id.order_profile_pic)
+    ImageView mProfilePic;
+    @BindView(R.id.order_client_name)
+    TextView mClientName;
+    @BindView(R.id.order_text_speciality)
+    TextView mSpeciality;
+    @BindView(R.id.order_price)
+    TextView mPrice;
+    @BindView(R.id.order_date_title)
+    TextView mDateTitle;
+    @BindView(R.id.order_date_content)
+    TextView mDateSubtitle;
+    @BindView(R.id.order_detail_address_title)
+    TextView mAddressTitle;
+    @BindView(R.id.order_detail_address_content)
+    TextView mAddressSubtitle;
+    @BindView(R.id.order_button_cancel)
+    AppCompatButton mButtonCancel;
+
+    @BindView(R.id.order_detail_notes_content)
+    TextView mTextNotes;
+
+    @BindView(R.id.divider_cancel)
+    View mDividerCancel;
+    @BindView(R.id.order_detail_cancel_layout)
+    ViewGroup mCancelLayout;
+    @BindView(R.id.order_detail_cancel_text)
+    TextView mCancelDescription;
+
+    @BindView(R.id.rating_bar)
+    RatingBar mRatingBar;
+
+    private OrderDetailsPresenter presenter;
+    private String bookingId;
+    private String phoneNo;
+    private double lat;
+    private double lng;
+
+    public static Intent getClassIntent(Context context, String bookingId, String customerPhotoUrl){
+        Intent intent = new Intent(context, OrderDetailsActivity.class);
+        intent.putExtra("bookingId", bookingId);
+        intent.putExtra("customerPhotoUrl", customerPhotoUrl);
+        return intent;
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_order_details);
+        ButterKnife.bind(this);
+        initToolbar(mToolbar);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+        //Hide layout while loading
+        mLayout.setVisibility(View.GONE);
+
+        Bundle data = getIntent().getExtras();
+
+        bookingId = data.getString("bookingId");
+
+        presenter = new OrderDetailsPresenter(this, this, getContext());
+
+    }
+
+    @OnClick({R.id.order_button_call, R.id.order_button_message, R.id.order_button_cancel})
+    public void onClick(View view){
+        switch(view.getId()){
+            case R.id.order_button_call:
+                callClient(this.phoneNo);
+                break;
+            case R.id.order_button_message:
+                messageClient(this.phoneNo);
+                break;
+            case R.id.order_button_cancel:
+                cancelBookingDialog();
+                break;
+        }
+    }
+
+    public void callClient(String phoneNo) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel: " + phoneNo));
+        startActivity(intent);
+    }
+
+    public void messageClient(String phoneNo) {
+        String phoneUnformatted = phoneNo;
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+        try {
+            Phonenumber.PhoneNumber swissNumberProto = phoneUtil.parse(phoneUnformatted, "ID");
+            String phoneFormatted = Objects.requireNonNull(
+                    phoneUtil.format(swissNumberProto, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL),
+                    "Phone number is null"
+            );
+            String url = "https://api.whatsapp.com/send?phone="+phoneFormatted.trim();
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(url));
+            startActivity(i);
+        } catch (NumberParseException e) {
+            System.err.println("NumberParseException was thrown: " + e.toString());
+        }
+    }
+
+    @Override
+    public void updateDisplay(String specialityFormatted, String customerPhotoUrl,
+                              String clientName, String priceFormatted, String address,
+                              String cancelDescription, String sessionTime,
+                              double lat, double lng, String bookingStatus,
+                              double rating, String bookingId, String phoneNo, String notes) {
+        dismissLoading();
+        mLayout.setVisibility(View.VISIBLE);
+
+        this.lat = lat;
+        this.lng = lng;
+        this.phoneNo = phoneNo;
+
+        if (customerPhotoUrl != null) {
+            GlideApp.with(getContext()).load(customerPhotoUrl)
+                    .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(R.color.grey)
+                    .error(R.drawable.trainer_icon)
+                    .into(mProfilePic);
+        }
+
+        mClientName.setText(clientName);
+        mSpeciality.setText(specialityFormatted);
+        mPrice.setText(priceFormatted);
+        mAddressSubtitle.setText(address);
+        mDateSubtitle.setText(sessionTime);
+        mTextNotes.setText(notes != null ? notes : "-");
+
+        //Set camera
+        final LatLng coordinates = new LatLng(lat, lng);
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(coordinates)
+                .zoom(16)                   // Sets the zoom
+                .build();                   // Creates a CameraPosition from the builder
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        mMap.addMarker(new MarkerOptions().position(coordinates).title("Customer's Location"));
+
+
+
+        switch(bookingStatus.toLowerCase()){
+            case "paid":
+                //Show only cancel button
+                mButtonCancel.setVisibility(View.VISIBLE);
+                mRatingBar.setVisibility(View.GONE);
+                mCancelLayout.setVisibility(View.GONE);
+                break;
+            case "cancel":
+                //Show the cancellation reason
+                if(cancelDescription != null) mCancelDescription.setText(cancelDescription);
+                mCancelLayout.setVisibility(View.VISIBLE);
+                mDividerCancel.setVisibility(View.VISIBLE);
+                mRatingBar.setVisibility(View.GONE);
+                mButtonCancel.setVisibility(View.GONE);
+                break;
+            case "completed":
+            case "start":
+                //hide all
+                mRatingBar.setVisibility(View.GONE);
+                mCancelLayout.setVisibility(View.GONE);
+                mButtonCancel.setVisibility(View.GONE);
+                break;
+            case "rated":
+                //show the review from user
+                mRatingBar.setVisibility(View.VISIBLE);
+                mRatingBar.setRating((float) rating);
+                mCancelLayout.setVisibility(View.GONE);
+                mButtonCancel.setVisibility(View.GONE);
+                break;
+            default:
+                showToastMessageLong("Unidentified booking status :" + bookingStatus);
+                break;
+        }
+    }
+
+
+    private void cancelBookingDialog() {
+        BaseMufitDialog dialog = new MufitDialogOneButton(this,
+                getString(R.string.order_details_cancel_booking_title),
+                R.layout.dialog_cancel_booking,
+                null);
+
+        View v = dialog.getContent();
+        final EditText etCancelBooking = v.findViewById(R.id.cancel_booking_description);
+        final TextView textErrorMessage = v.findViewById(R.id.cancel_booking_error);
+
+        ((MufitDialogOneButton) dialog).getBtn().setText(R.string.submit);
+        ((MufitDialogOneButton) dialog).getBtn().setOnClickListener(v1 -> {
+
+            String description = etCancelBooking.getText().toString();
+            if(description.length() > 20){
+                textErrorMessage.setVisibility(View.INVISIBLE);
+                dialog.dismissDialog();
+                presenter.cancelBooking(bookingId, description, 0);
+            } else {
+                textErrorMessage.setVisibility(View.VISIBLE);
+                textErrorMessage.startAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.shake));
+                textErrorMessage.requestFocus();
+            }
+
+        });
+    }
+
+    @Override
+    public void onBookingCancelled() {
+        Toast.makeText(getContext(), "Successfully cancelled your booking.", Toast.LENGTH_SHORT).show();
+        backActivity(getContext(), HistoryActivity.class);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        presenter.getBookingDetails(bookingId);
+    }
+
+    /**
+     * OnClick method for R.id.order_btn_open_maps
+     * There are two format for URI:
+     * - google.navigation:q=a+street+address
+     * - google.navigation:q=latitude,longitude
+     *
+     * See <a href="https://developers.google.com/maps/documentation/urls/android-intents#launch_turn-by-turn_navigation"> Google Maps doc</a>
+     *
+     * @param view - View which calls this method
+     */
+    @Override
+    public void openGoogleMap(View view) {
+        String uriPrefix = "google.navigation:q";
+        String lat = String.valueOf(this.lat);
+        String lng = String.valueOf(this.lng);
+        String uriString = String.format("%s=%s,%s", uriPrefix, lat, lng);
+
+        Uri gmapsIntentUri = Uri.parse(uriString);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmapsIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        if (mapIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(mapIntent);
+        } else {
+            showToastMessageLong("Unable to find Google Maps on your device");
+        }
+
+    }
+
+    @Override
+    public void showLogDebug(String tag, String message) {
+
+    }
+
+    @Override
+    public void noInternetError() {
+
+    }
+
+    @Override
+    public void showLoading() {
+        
+    }
+
+    @Override
+    public void dismissLoading() {
+
+    }
+
+    @Override
+    public void showError(String errorMessage) {
+        showSnackbarLong(findViewById(android.R.id.content),errorMessage);
+    }
+
+}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        

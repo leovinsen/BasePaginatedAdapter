@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AndroidLayouts">
+    <shared>
+      <config>
+        <device id="Nexus 6P" />
+        <device id="pixel_2" />
+        <device id="Nexus 5X" />
+        <device id="pixel_xl" />
+        <device id="pixel_2_xl" />
+        <device id="pixel" />
+        <device id="Nexus 6" />
+        <device id="4.65in 720p (Galaxy Nexus)" />
+        <device id="pixel_c" />
+        <device id="Nexus 7 2013" />
+        <target>android-28</target>
+      </config>
+    </shared>
+  </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="debug" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
+    <option name="TOOL_WINDOW_REGEXP_FILTER" value="false" />
+  </component>
+  <component name="AutomaticModuleUnloader">
+    <loaded-modules>
+      <module name="mufit-android-trainer" />
+      <module name="app" />
+    </loaded-modules>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="0beace76-3df9-409a-9f36-a4c023c3be11" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/nostratech/mufit/trainer/profile/editprofile/ProfileTrainerMediaAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/nostratech/mufit/trainer/profile/editprofile/ProfileTrainerMediaAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_order_details.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_order_details.xml" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="mufit-android-trainer" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="mufit-android-trainer" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_order_details.xml">
+          <provider editor-type-id="text-editor">
+            <state relative-caret-position="162">
+              <caret line="211" column="57" selection-start-line="211" selection-start-column="57" selection-end-line="211" selection-end-column="57" />
+              <folding>
+                <element signature="e#770#784#0" expanded="true" />
+                <element signature="e#1295#1330#0" expanded="true" />
+                <element signature="e#2031#2069#0" expanded="true" />
+                <element signature="e#2108#2146#0" expanded="true" />
+                <element signature="e#2650#2698#0" expanded="true" />
+                <element signature="e#2737#2785#0" expanded="true" />
+                <element signature="e#3032#3068#0" expanded="true" />
+                <element signature="e#3780#3828#0" expanded="true" />
+                <element signature="e#3976#4005#0" expanded="true" />
+                <element signature="e#4546#4586#0" expanded="true" />
+                <element signature="e#4742#4771#0" expanded="true" />
+                <element signature="e#5411#5451#0" expanded="true" />
+                <element signature="e#5559#5588#0" expanded="true" />
+                <element signature="e#6009#6042#0" expanded="true" />
+                <element signature="e#6081#6114#0" expanded="true" />
+                <element signature="e#6156#6170#0" expanded="true" />
+                <element signature="e#6432#6472#0" expanded="true" />
+                <element signature="e#6880#6913#0" expanded="true" />
+                <element signature="e#6952#6985#0" expanded="true" />
+                <element signature="e#7296#7343#0" expanded="true" />
+                <element signature="e#7868#7882#0" expanded="true" />
+                <element signature="e#8304#8329#0" expanded="true" />
+    

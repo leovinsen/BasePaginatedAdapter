@@ -1,0 +1,97 @@
+// Generated code from Butter Knife. Do not modify!
+package com.nostratech.mufit.trainer.order;
+
+import android.support.annotation.CallSuper;
+import android.support.annotation.UiThread;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RatingBar;
+import android.widget.TextView;
+import butterknife.Unbinder;
+import butterknife.internal.DebouncingOnClickListener;
+import butterknife.internal.Utils;
+import com.nostratech.mufit.trainer.R;
+import java.lang.IllegalStateException;
+import java.lang.Override;
+
+public class OrderDetailsActivity_ViewBinding implements Unbinder {
+  private OrderDetailsActivity target;
+
+  private View view2131362069;
+
+  private View view2131362068;
+
+  private View view2131362070;
+
+  @UiThread
+  public OrderDetailsActivity_ViewBinding(OrderDetailsActivity target) {
+    this(target, target.getWindow().getDecorView());
+  }
+
+  @UiThread
+  public OrderDetailsActivity_ViewBinding(final OrderDetailsActivity target, View source) {
+    this.target = target;
+
+    View view;
+    target.mToolbar = Utils.findRequiredViewAsType(source, R.id.toolbar, "field 'mToolbar'", Toolbar.class);
+    target.mLayout = Utils.findRequiredView(source, R.id.order_details, "field 'mLayout'");
+    target.mProfilePic = Utils.findRequiredViewAsType(source, R.id.order_profile_pic, "field 'mProfilePic'", ImageView.class);
+    target.mClientName = Utils.findRequiredViewAsType(source, R.id.order_client_name, "field 'mClientName'", TextView.class);
+    target.mSpeciality = Utils.findRequiredViewAsType(source, R.id.order_text_speciality, "field 'mSpeciality'", TextView.class);
+    target.mPrice = Utils.findRequiredViewAsType(source, R.id.order_price, "field 'mPrice'", TextView.class);
+    target.mDateTitle = Utils.findRequiredViewAsType(source, R.id.order_date_title, "field 'mDateTitle'", TextView.class);
+    target.mDateSubtitle = Utils.findRequiredViewAsType(source, R.id.order_date_content, "field 'mDateSubtitle'", TextView.class);
+    target.mAddressTitle = Utils.findRequiredViewAsType(source, R.id.order_detail_address_title, "field 'mAddressTitle'", TextView.class);
+    target.mAddressSubtitle = Utils.findRequiredViewAsType(source, R.id.order_detail_address_content, "field 'mAddressSubtitle'", TextView.class);
+    view = Utils.findRequiredView(source, R.id.order_button_cancel, "field 'mButtonCancel' and method 'onClick'");
+    target.mButtonCancel = Utils.castView(view, R.id.order_button_cancel, "field 'mButtonCancel'", AppCompatButton.class);
+    view2131362069 = view;
+    view.setOnClickListener(new DebouncingOnClickListener() {
+      @Override
+      public void doClick(View p0) {
+        target.onClick(p0);
+      }
+    });
+    target.mTextNotes = Utils.findRequiredViewAsType(source, R.id.order_detail_notes_content, "field 'mTextNotes'", TextView.class);
+    target.mDividerCancel = Utils.findRequiredView(source, R.id.divider_cancel, "field 'mDividerCancel'");
+    target.mCancelLayout = Utils.findRequiredViewAsType(source, R.id.order_detail_cancel_layout, "field 'mCancelLayout'", ViewGroup.class);
+    target.mCancelDescription = Utils.findRequiredViewAsType(source, R.id.order_detail_cancel_text, "field 'mCancelDescription'", TextView.class);
+    target.mRatingBar = Utils.findRequiredViewAsType(source, R.id.rating_bar, "field 'mRatingBar'", RatingBar.class);
+    view = Utils.findRequiredView(source, R.id.order_button_call, "method 'onClick'");
+    view2131362068 = view;
+    view.setOnClickListener(new DebouncingOnClickListener() {
+      @Override
+      public void doClick(View p0) {
+        target.onClick(p0);
+      }
+    });
+    view = Utils.findRequiredView(source, R.id.order_button_message, "method 'onClick'");
+    view2131362070 = view;
+    view.setOnClickListener(new DebouncingOnClickListener() {
+      @Override
+      public void doClick(View p0) {
+        target.onClick(p0);
+      }
+    });
+  }
+
+  @Override
+  @CallSuper
+  public void unbind() {
+    OrderDetailsActivity target = this.target;
+    if (target == null) throw new IllegalStateException("Bindings already cleared.");
+    this.target = null;
+
+    target.mToolbar = null;
+    target.mLayout = null;
+    target.mProfilePic = null;
+    target.mClientName = null;
+    target.mSpeciality = null;
+    target.mPrice = null;
+    target.mDateTitle = null;
+    target.mDateSubtitle = null;
+    target.mAddressTitle = null;
+   
